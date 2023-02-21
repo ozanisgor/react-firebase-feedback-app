@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 import { Link, useNavigate } from "react-router-dom"
-import { ReactComponent as PersonOutlineIcon } from "../components/assets/personIcon.svg"
+import ProfileIconLink from "./ProfileIconLink"
 
 function Header({ text, bgColor, textColor }) {
   const navigate = useNavigate()
@@ -16,7 +16,7 @@ function Header({ text, bgColor, textColor }) {
           <h2>{text}</h2>
         </Link>
         <div className='profileDiv' onClick={() => navigate("/profile")}>
-          <PersonOutlineIcon fill='#fff' width={"36px"} height={"36px"} />
+          <ProfileIconLink fill='#fff' />
         </div>
       </div>
     </header>
