@@ -4,6 +4,7 @@ import FeedbackList from "./components/FeedbackList"
 import FeedbackStats from "./components/FeedbackStats"
 import FeedbackForm from "./components/FeedbackForm"
 import AboutIconLink from "./components/AboutIconLink"
+import PrivateRoute from "./components/PrivateRoute"
 import AboutPage from "./pages/AboutPage"
 import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
@@ -34,7 +35,9 @@ function App() {
             <Route path='/about' element={<AboutPage />} />
             <Route path='/sign-in' element={<SignIn />} />
             <Route path='/sign-up' element={<SignUp />} />
-            <Route path='/profile' element={<Profile />} />
+            <Route path='/profile' element={<PrivateRoute />}>
+              <Route path='/profile' element={<Profile />} />
+            </Route>
           </Routes>
 
           <AboutIconLink />
