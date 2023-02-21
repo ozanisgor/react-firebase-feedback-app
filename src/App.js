@@ -9,6 +9,7 @@ import AboutPage from "./pages/AboutPage"
 import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
 import Profile from "./pages/Profile"
+import ForgotPassword from "./pages/ForgotPassword"
 import { FeedbackProvider } from "./context/FeedbackContext"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -38,6 +39,7 @@ function App() {
             <Route path='/profile' element={<PrivateRoute />}>
               <Route path='/profile' element={<Profile />} />
             </Route>
+            <Route path='/forgot-password' element={<ForgotPassword />} />
           </Routes>
 
           <AboutIconLink />
