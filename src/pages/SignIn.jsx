@@ -1,8 +1,10 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+
 import { ReactComponent as ArrowRightIcon } from "../components/assets/keyboardArrowRightIcon.svg"
 import visibilityIcon from "../components/assets/visibilityIcon.svg"
-import Card from "../components/shared/Card"
 
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false)
@@ -22,13 +24,33 @@ function SignIn() {
     }))
   }
 
+  const onSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      const auth = getAuth()
+
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      )
+
+      if (userCredential.user) {
+        navigate("/profile")
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <>
       <div className='pageContainer'>
         <header>
           <p className='pageHeader'>Welcome!</p>
         </header>
-        <form>
+        <form onSubmit={onSubmit}>
           <input
             type='email'
             className='emailInput'

@@ -7,6 +7,7 @@ import AboutIconLink from "./components/AboutIconLink"
 import AboutPage from "./pages/AboutPage"
 import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
+import Profile from "./pages/Profile"
 import { FeedbackProvider } from "./context/FeedbackContext"
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
             <Route path='/about' element={<AboutPage />} />
             <Route path='/sign-in' element={<SignIn />} />
             <Route path='/sign-up' element={<SignUp />} />
+            <Route path='/profile' element={<Profile />} />
           </Routes>
 
           <AboutIconLink />
