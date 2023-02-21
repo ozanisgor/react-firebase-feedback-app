@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import { toast } from "react-toastify"
 
 import { ReactComponent as ArrowRightIcon } from "../components/assets/keyboardArrowRightIcon.svg"
 import visibilityIcon from "../components/assets/visibilityIcon.svg"
@@ -40,7 +41,7 @@ function SignIn() {
         navigate("/profile")
       }
     } catch (error) {
-      console.error(error)
+      toast.error("Wrong email or password")
     }
   }
 

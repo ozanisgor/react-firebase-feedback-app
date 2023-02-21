@@ -8,6 +8,7 @@ import {
 } from "firebase/auth"
 import { db } from "../firebase.config"
 import { setDoc, doc, serverTimestamp } from "firebase/firestore"
+import { toast } from "react-toastify"
 
 import { ReactComponent as ArrowRightIcon } from "../components/assets/keyboardArrowRightIcon.svg"
 import visibilityIcon from "../components/assets/visibilityIcon.svg"
@@ -53,7 +54,7 @@ function SignUp() {
 
       navigate("/")
     } catch (error) {
-      console.log(error)
+      toast.error("Something missing or wrong")
     }
   }
 
