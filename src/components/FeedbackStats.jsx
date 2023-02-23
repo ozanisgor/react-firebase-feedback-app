@@ -1,11 +1,27 @@
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import FeedbackContext from "../context/FeedbackContext"
+import { query, collection, onSnapshot } from "firebase/firestore"
+import { db } from "../firebase.config"
 
 function FeedbackStats() {
-  const { feedbacks } = useContext(FeedbackContext)
+  const [feedbacks, setFeedbacks] = useState([])
+
+  useEffect(() => {
+    const q = query(collection(db, "feedbacks"))
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      let feedbacksArr = []
+      querySnapshot.forEach((doc) => {
+        feedbacksArr.push({ ...doc.data(), id: doc.id })
+      })
+      setFeedbacks(feedbacksArr)
+    })
+    return () => unsubscribe()
+  }, [])
 
   const ratingsArray = []
-  feedbacks.forEach((feedback) => ratingsArray.push(feedback.data.rating))
+  feedbacks.forEach((feedback) => {
+    ratingsArray.push(feedback.rating)
+  })
 
   const average =
     ratingsArray.length === 0
