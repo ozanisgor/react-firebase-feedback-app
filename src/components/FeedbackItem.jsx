@@ -12,14 +12,14 @@ function FeedbackItem({ item }) {
   const auth = getAuth()
 
   const handleDelete = () => {
-    if (item.userRef === auth.currentUser.uid) {
+    if (auth.currentUser && item.userRef === auth.currentUser.uid) {
       deleteFeedback(item.id)
     } else {
       toast.error("You need to be owner of the feedback")
     }
   }
   const handleUpdate = () => {
-    if (item.userRef === auth.currentUser.uid) {
+    if (auth.currentUser && item.userRef === auth.currentUser.uid) {
       editFeedback(item)
     } else {
       toast.error("You need to be owner of the feedback")
