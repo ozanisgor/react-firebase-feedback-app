@@ -18,6 +18,13 @@ function FeedbackItem({ item }) {
       toast.error("You need to be owner of the feedback")
     }
   }
+  const handleUpdate = () => {
+    if (item.userRef === auth.currentUser.uid) {
+      editFeedback(item)
+    } else {
+      toast.error("You need to be owner of the feedback")
+    }
+  }
 
   return (
     <Card>
@@ -25,7 +32,7 @@ function FeedbackItem({ item }) {
       <button onClick={handleDelete} className='close'>
         <FaTimes color='purple' />
       </button>
-      <button onClick={() => editFeedback(item)} className='edit'>
+      <button onClick={handleUpdate} className='edit'>
         <FaEdit color='purple' />
       </button>
       <div className='text-display'>{item.text}</div>
