@@ -25,13 +25,16 @@ function FeedbackForm() {
   const auth = getAuth()
   const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   if (feedbackEdit.edit === true) {
-  //     setBtnDisabled(false)
-  //     setText(feedbackEdit.item.text)
-  //     setRating(feedbackEdit.item.rating)
-  //   }
-  // }, [feedbackEdit])
+  useEffect(() => {
+    if (feedbackEdit.edit === true) {
+      setBtnDisabled(false)
+      setFormData({
+        ...formData,
+        text: feedbackEdit.item.text,
+        rating: feedbackEdit.item.rating,
+      })
+    }
+  }, [feedbackEdit])
 
   // NOTE: This should be checking input value not state as state won't be the updated value until the next render of the component
 
@@ -65,6 +68,8 @@ function FeedbackForm() {
           }
 
           if (feedbackEdit.edit === true) {
+            // console.log(newFeedback)
+            // console.log(feedbackEdit.item.id)
             updateFeedback(feedbackEdit.item.id, newFeedback)
           } else {
             addFeedback(newFeedback)

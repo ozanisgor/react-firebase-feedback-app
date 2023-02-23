@@ -1,6 +1,12 @@
 import { createContext, useState } from "react"
 
-import { addDoc, collection, serverTimestamp } from "firebase/firestore"
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  updateDoc,
+  doc,
+} from "firebase/firestore"
 import { db } from "../firebase.config"
 
 const FeedbackContext = createContext()
@@ -27,10 +33,16 @@ export const FeedbackProvider = ({ children }) => {
     }
   }
   // Update feedback item
-  const updateFeedback = (id, updItem) => {
-    setFeedbacks(
-      feedbacks.map((item) => (item.id === id ? { ...item, ...updItem } : item))
-    )
+  const updateFeedback = async (id, updItem) => {
+    console.log(id)
+    console.log(updItem)
+
+    await updateDoc(doc(db, "feedbacks", id), {
+      ...updItem,
+      rating: updItem.rating,
+      text: updItem.text,
+      timestamp: serverTimestamp(),
+    })
   }
   // Set item to be updated
   const editFeedback = (item) => {
