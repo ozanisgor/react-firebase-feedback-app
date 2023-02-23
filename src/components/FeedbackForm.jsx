@@ -1,25 +1,37 @@
-import { useState, useContext, useEffect } from 'react'
-import RatingSelect from './RatingSelect'
-import Card from './shared/Card'
-import Button from './shared/Button'
-import FeedbackContext from '../context/FeedbackContext'
+import { useState, useContext, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+
+import { getAuth, onAuthStateChanged } from "firebase/auth"
+
+import RatingSelect from "./RatingSelect"
+import Card from "./shared/Card"
+import Button from "./shared/Button"
+import FeedbackContext from "../context/FeedbackContext"
 
 function FeedbackForm() {
-  const [text, setText] = useState('')
-  const [rating, setRating] = useState(10)
   const [btnDisabled, setBtnDisabled] = useState(true)
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState("")
+  const [selectedRating, setSelectedRating] = useState(10)
+  const [formData, setFormData] = useState({
+    text: "",
+    rating: 10,
+  })
+
+  const { text } = formData
 
   const { addFeedback, feedbackEdit, updateFeedback } =
     useContext(FeedbackContext)
 
-  useEffect(() => {
-    if (feedbackEdit.edit === true) {
-      setBtnDisabled(false)
-      setText(feedbackEdit.item.text)
-      setRating(feedbackEdit.item.rating)
-    }
-  }, [feedbackEdit])
+  const auth = getAuth()
+  const navigate = useNavigate()
+
+  // useEffect(() => {
+  //   if (feedbackEdit.edit === true) {
+  //     setBtnDisabled(false)
+  //     setText(feedbackEdit.item.text)
+  //     setRating(feedbackEdit.item.rating)
+  //   }
+  // }, [feedbackEdit])
 
   // NOTE: This should be checking input value not state as state won't be the updated value until the next render of the component
 
@@ -28,7 +40,7 @@ function FeedbackForm() {
     if (value === '') {
       setBtnDisabled(true)
       setMessage(null)
-      
+
   // prettier-ignore
     } else if (value.trim().length < 10) { // 👈 check for less than 10
       setMessage('Text must be at least 10 characters')
@@ -37,28 +49,36 @@ function FeedbackForm() {
       setMessage(null)
       setBtnDisabled(false)
     }
-    setText(value)
+    setFormData({...formData, text: value})
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    if (text.trim().length > 10) {
-      const newFeedback = {
-        text,
-        rating,
-      }
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        e.preventDefault()
+        setFormData({ ...formData, userRef: user.uid })
+        if (text.trim().length > 10) {
+          const newFeedback = {
+            text,
+            rating: selectedRating,
+            userRef: user.uid,
+          }
 
-      if (feedbackEdit.edit === true) {
-        updateFeedback(feedbackEdit.item.id, newFeedback)
+          if (feedbackEdit.edit === true) {
+            updateFeedback(feedbackEdit.item.id, newFeedback)
+          } else {
+            addFeedback(newFeedback)
+          }
+
+          // NOTE: reset to default state after submission
+          setBtnDisabled(true) // 👈  add this line to reset disabled
+          setFormData({ ...formData, text: "", rating: 10 })
+          navigate("/")
+        }
       } else {
-        addFeedback(newFeedback)
+        navigate("/sign-in")
       }
-
-      // NOTE: reset to default state after submission
-      setBtnDisabled(true) // 👈  add this line to reset disabled
-      setRating(10) //👈 add this line to set rating back to 10
-      setText('')
-    }
+    })
   }
 
   // NOTE: pass selected to RatingSelect so we don't need local duplicate state
@@ -66,7 +86,7 @@ function FeedbackForm() {
     <Card>
       <form onSubmit={handleSubmit}>
         <h2>How would you rate your service with us?</h2>
-        <RatingSelect select={setRating} selected={rating} />
+        <RatingSelect select={setSelectedRating} selected={selectedRating} />
         <div className='input-group'>
           <input
             onChange={handleTextChange}

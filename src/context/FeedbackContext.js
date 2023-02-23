@@ -1,5 +1,7 @@
-import { v4 as uuidv4 } from "uuid"
 import { createContext, useState } from "react"
+
+import { addDoc, collection, serverTimestamp } from "firebase/firestore"
+import { db } from "../firebase.config"
 
 const FeedbackContext = createContext()
 
@@ -11,9 +13,12 @@ export const FeedbackProvider = ({ children }) => {
   })
 
   // Add feedback
-  const addFeedback = (newFeedback) => {
-    newFeedback.id = uuidv4()
-    setFeedbacks([newFeedback, ...feedbacks])
+  const addFeedback = async (newFeedback) => {
+    const feedback = {
+      ...newFeedback,
+      timestamp: serverTimestamp(),
+    }
+    await addDoc(collection(db, "feedbacks"), feedback)
   }
   // Delete feedback
   const deleteFeedback = (id) => {

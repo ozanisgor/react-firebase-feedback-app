@@ -1,15 +1,15 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
+import { initializeApp } from "firebase/app"
+import { getFirestore } from "firebase/firestore"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyAIWueQsnaAbcwbbguVWIAVmgw4oQuCuFk',
-  authDomain: 'feedback-app-react.firebaseapp.com',
-  projectId: 'feedback-app-react',
-  storageBucket: 'feedback-app-react.appspot.com',
-  messagingSenderId: '360735585272',
-  appId: '1:360735585272:web:cc7aebf36bd792f51b9c0d',
+  apiKey: "AIzaSyDEsN7VFFEjhO_r123I7ev2wXB9SjbKa_k",
+  authDomain: "feedback-2nd.firebaseapp.com",
+  projectId: "feedback-2nd",
+  storageBucket: "feedback-2nd.appspot.com",
+  messagingSenderId: "744312816695",
+  appId: "1:744312816695:web:4d91a3ce29217a0cee6bb2",
 }
 
 // Initialize Firebase

@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import FeedbackItem from "./FeedbackItem"
 
 import { useEffect, useState } from "react"
-import { collection, getDocs, query } from "firebase/firestore"
+import { collection, onSnapshot, query } from "firebase/firestore"
 import { db } from "../firebase.config"
 import { toast } from "react-toastify"
 import Spinner from "../components/Spinner"
@@ -12,36 +12,23 @@ function FeedbackList() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchFeedbacks = async () => {
-      try {
-        // Get reference
-        const feedbacksRef = collection(db, "feedbacks")
-
-        // Create a query
-        const q = query(feedbacksRef)
-
-        // Execute query
-        const querySnap = await getDocs(q)
-
-        const feedbacks = []
-
-        querySnap.forEach((doc) => {
-          return feedbacks.push({
-            id: doc.id,
-            data: doc.data(),
-          })
+    try {
+      const q = query(collection(db, "feedbacks"))
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        let feedbacksArr = []
+        querySnapshot.forEach((doc) => {
+          feedbacksArr.push({ ...doc.data(), id: doc.id })
         })
-
-        setFeedbacks(feedbacks)
+        setFeedbacks(feedbacksArr)
         setLoading(false)
-      } catch (error) {
-        toast.error("Could not fetch feedbacks")
-      }
+      })
+      return () => unsubscribe()
+    } catch (error) {
+      toast.error("Could not fetch feedbacks")
     }
-    fetchFeedbacks()
   }, [])
 
-  if (!feedbacks || feedbacks.length === 0) {
+  if (loading) {
     return <Spinner />
   }
 
