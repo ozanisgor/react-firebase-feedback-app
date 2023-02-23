@@ -68,8 +68,6 @@ function FeedbackForm() {
           }
 
           if (feedbackEdit.edit === true) {
-            // console.log(newFeedback)
-            // console.log(feedbackEdit.item.id)
             updateFeedback(feedbackEdit.item.id, newFeedback)
           } else {
             addFeedback(newFeedback)

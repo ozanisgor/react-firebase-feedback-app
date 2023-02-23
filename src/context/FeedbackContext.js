@@ -6,6 +6,7 @@ import {
   serverTimestamp,
   updateDoc,
   doc,
+  deleteDoc,
 } from "firebase/firestore"
 import { db } from "../firebase.config"
 
@@ -27,16 +28,13 @@ export const FeedbackProvider = ({ children }) => {
     await addDoc(collection(db, "feedbacks"), feedback)
   }
   // Delete feedback
-  const deleteFeedback = (id) => {
+  const deleteFeedback = async (id) => {
     if (window.confirm("Are you sure you want to delete?")) {
-      setFeedbacks(feedbacks.filter((item) => item.id !== id))
+      await deleteDoc(doc(db, "feedbacks", id))
     }
   }
   // Update feedback item
   const updateFeedback = async (id, updItem) => {
-    console.log(id)
-    console.log(updItem)
-
     await updateDoc(doc(db, "feedbacks", id), {
       ...updItem,
       rating: updItem.rating,
