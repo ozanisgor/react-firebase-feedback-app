@@ -16,8 +16,16 @@ function FeedbackItem({ item }) {
     }
   }
 
+  const goToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    })
+  }
+
   const handleUpdate = () => {
     if (auth.currentUser && item.userRef === auth.currentUser.uid) {
+      goToTop()
       editFeedback(item)
     }
   }
