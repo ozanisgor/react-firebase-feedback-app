@@ -7,14 +7,15 @@ import RatingSelect from "./RatingSelect"
 import Card from "./shared/Card"
 import Button from "./shared/Button"
 import FeedbackContext from "../context/FeedbackContext"
+import { toast } from "react-toastify"
 
 function FeedbackForm() {
   const [btnDisabled, setBtnDisabled] = useState(true)
   const [message, setMessage] = useState("")
-  const [selectedRating, setSelectedRating] = useState(10)
+  const [selectedRating, setSelectedRating] = useState(null)
   const [formData, setFormData] = useState({
     text: "",
-    rating: 10,
+    rating: null,
   })
 
   const { text } = formData
@@ -61,16 +62,20 @@ function FeedbackForm() {
         e.preventDefault()
         setFormData({ ...formData, userRef: user.uid })
         if (text.trim().length > 10) {
-          const newFeedback = {
-            text,
-            rating: selectedRating,
-            userRef: user.uid,
-          }
-
-          if (feedbackEdit.edit === true) {
-            updateFeedback(feedbackEdit.item.id, newFeedback)
+          if (!selectedRating) {
+            toast.error("Please Select a Rating")
           } else {
-            addFeedback(newFeedback)
+            const newFeedback = {
+              text,
+              rating: selectedRating,
+              userRef: user.uid,
+            }
+
+            if (feedbackEdit.edit === true) {
+              updateFeedback(feedbackEdit.item.id, newFeedback)
+            } else {
+              addFeedback(newFeedback)
+            }
           }
 
           // NOTE: reset to default state after submission
