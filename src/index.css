@@ -520,3 +520,8 @@ input:focus {
 .socialIconImg {
   width: 100%;
 }
+
+.feedbackText {
+  margin-top: 3rem;
+  font-weight: 600;
+}

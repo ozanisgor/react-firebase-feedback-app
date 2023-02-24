@@ -1,20 +1,57 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { motion, AnimatePresence } from "framer-motion"
 
 import { getAuth, updateProfile } from "firebase/auth"
-import { updateDoc, doc } from "firebase/firestore"
+import {
+  updateDoc,
+  doc,
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore"
 import { db } from "../firebase.config"
 import { toast } from "react-toastify"
+
+import FeedbackItem from "../components/FeedbackItem"
+import Spinner from "../components/Spinner"
 
 function Profile() {
   const auth = getAuth()
   const [changeDetails, setChangeDetails] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [feedbacks, setFeedbacks] = useState(null)
   const [formData, setFormData] = useState({
     name: auth.currentUser.displayName,
     email: auth.currentUser.email,
   })
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    try {
+      const q = query(
+        collection(db, "feedbacks"),
+        where("userRef", "==", auth.currentUser.uid)
+      )
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        let feedbacksArr = []
+        querySnapshot.forEach((doc) => {
+          feedbacksArr.push({ ...doc.data(), id: doc.id })
+        })
+        setFeedbacks(feedbacksArr)
+        setLoading(false)
+      })
+      return () => unsubscribe()
+    } catch (error) {
+      toast.error("Could not fetch feedbacks")
+    }
+  }, [auth.currentUser.uid])
+
+  if (loading) {
+    return <Spinner />
+  }
 
   const onLogout = () => {
     auth.signOut()
@@ -82,6 +119,26 @@ function Profile() {
             />
           </form>
         </div>
+
+        {!loading && feedbacks?.length > 0 && (
+          <>
+            <p className='feedbackText'>Your Feedbacks</p>
+            <div className='feedback-list'>
+              <AnimatePresence>
+                {feedbacks.map((item) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <FeedbackItem key={item.id} item={item} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </>
+        )}
       </main>
     </div>
   )

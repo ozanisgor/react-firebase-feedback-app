@@ -4,11 +4,13 @@ import PropTypes from "prop-types"
 import Card from "./shared/Card"
 import FeedbackContext from "../context/FeedbackContext"
 import { getAuth } from "firebase/auth"
+import { useNavigate } from "react-router-dom"
 
-function FeedbackItem({ item }) {
+function FeedbackItem({ item, onDelete }) {
   const { deleteFeedback, editFeedback } = useContext(FeedbackContext)
 
   const auth = getAuth()
+  const navigate = useNavigate()
 
   const handleDelete = () => {
     if (auth.currentUser && item.userRef === auth.currentUser.uid) {
@@ -24,8 +26,15 @@ function FeedbackItem({ item }) {
   }
 
   const handleUpdate = () => {
-    if (auth.currentUser && item.userRef === auth.currentUser.uid) {
+    if (
+      auth.currentUser &&
+      item.userRef === auth.currentUser.uid &&
+      window.location.pathname === "/"
+    ) {
       goToTop()
+      editFeedback(item)
+    } else {
+      navigate("/")
       editFeedback(item)
     }
   }
