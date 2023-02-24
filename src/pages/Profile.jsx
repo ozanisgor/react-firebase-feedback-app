@@ -10,6 +10,7 @@ import {
   query,
   where,
   onSnapshot,
+  orderBy,
 } from "firebase/firestore"
 import { db } from "../firebase.config"
 import { toast } from "react-toastify"
@@ -33,7 +34,8 @@ function Profile() {
     try {
       const q = query(
         collection(db, "feedbacks"),
-        where("userRef", "==", auth.currentUser.uid)
+        where("userRef", "==", auth.currentUser.uid),
+        orderBy("timestamp", "desc")
       )
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         let feedbacksArr = []

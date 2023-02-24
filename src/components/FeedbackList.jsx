@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import FeedbackItem from "./FeedbackItem"
 
 import { useEffect, useState } from "react"
-import { collection, onSnapshot, query } from "firebase/firestore"
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
 import { db } from "../firebase.config"
 import { toast } from "react-toastify"
 import Spinner from "../components/Spinner"
@@ -13,7 +13,7 @@ function FeedbackList() {
 
   useEffect(() => {
     try {
-      const q = query(collection(db, "feedbacks"))
+      const q = query(collection(db, "feedbacks"), orderBy("timestamp", "desc"))
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         let feedbacksArr = []
         querySnapshot.forEach((doc) => {
