@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDEsN7VFFEjhO_r123I7ev2wXB9SjbKa_k",
+  apiKey: process.env.REACT_APP_FIREBASE_KEY,
   authDomain: "feedback-2nd.firebaseapp.com",
   projectId: "feedback-2nd",
   storageBucket: "feedback-2nd.appspot.com",
